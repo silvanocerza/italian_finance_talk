@@ -22,6 +22,9 @@ class CKAN:
         # Don't be a smartass, thanks.
         self._ckan.base_url = ""
 
+        self._cache_path = output_path / ".cache"
+        self._cache_path.mkdir(parents=True, exist_ok=True)
+
         self._output_path = output_path
         self._output_path.mkdir(parents=True, exist_ok=True)
 
@@ -57,14 +60,19 @@ class CKAN:
         # There are invalid chars in file names
         name = name.replace("/", "-")
 
+        download_path = download_path / name
+        if download_path.exists():
+            return
+
         max_retries = 10
         # Try some times, servers are wonky
+        last_exc = None
         for _ in range(max_retries):
             try:
                 async with self._session.get(url) as res:
                     res.raise_for_status()
                     total = int(res.headers.get("Content-Length", 0))
-                    with (download_path / name).open("wb") as fd, tqdm(
+                    with download_path.open("wb") as fd, tqdm(
                         total=total,
                         unit="B",
                         unit_scale=True,
@@ -75,17 +83,23 @@ class CKAN:
                             progress.update(len(chunk))
                 # SUCCESS!
                 break
-            except aiohttp.ClientResponseError:
+            except Exception as exc:
+                last_exc = exc
                 continue
         else:
             # Servers are being stupid I guess 🤷
-            print(f"Couldn't download {url}")
+            print(f"Couldn't download {url}: {last_exc}")
 
     async def group_list(self):
         return await self._ckan.action.group_list()
 
     async def dump_package(self, package_id: str, download_path: Path):
-        package = await self._ckan.action.package_show(id=package_id)
+        cache = self._cache_path / f"{package_id}.json"
+        if not cache.exists():
+            package = await self._ckan.action.package_show(id=package_id)
+            cache.write_text(json.dumps(package))
+        else:
+            package = json.loads(cache.read_text())
 
         if author := package.get("author", ""):
             download_path = download_path / author
@@ -108,7 +122,12 @@ class CKAN:
         (download_path / "metadata.json").write_text(json.dumps(package))
 
     async def dump_group(self, group_id: str):
-        group = await self._ckan.action.group_show(id=group_id)
+        cache = self._cache_path / f"{group_id}.json"
+        if not cache.exists():
+            group = await self._ckan.action.group_show(id=group_id)
+            cache.write_text(json.dumps(group))
+        else:
+            group = json.loads(cache.read_text())
 
         name = group.get("name", "")
 

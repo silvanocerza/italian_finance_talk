@@ -68,7 +68,11 @@ class AsyncRemoteCKAN:
         status, response = await self._request_fn_get(
             url, data_dict, headers, requests_kwargs
         )
-        return reverse_apicontroller_action(url, status, response)
+        try:
+            return reverse_apicontroller_action(url, status, response)
+        except:
+            # Just ignore errors, I can deal with it
+            return {}
 
     async def _request_fn_get(self, url, data_dict, headers, requests_kwargs):
         max_retries = 10
