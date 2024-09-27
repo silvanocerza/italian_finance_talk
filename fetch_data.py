@@ -155,19 +155,19 @@ class CKAN:
 
 
 groups = [
-    # "163_anagrafe-enti-della-pubblica-amministrazione",
-    # "151_bilanci-degli-enti-della-pubblica-amministrazione",
+    "163_anagrafe-enti-della-pubblica-amministrazione",
+    "151_bilanci-degli-enti-della-pubblica-amministrazione",
     "63_bilancio-finanziario-dello-stato",
-    # "152_debito-degli-enti-della-pubblica-amministrazione",
-    # "74_gestione-delle-spese-dello-stato",
-    # "81_gestione-di-cassa-degli-enti-della-pubblica-amministrazione",
-    # "146_litalia-e-lunione-europea",
-    # "172_opere-pubbliche",
-    # "82_pubblico-impiego",
-    # "181_rendiconto",
-    # "432_rendiconto",
-    # "77_sanit",
-    # "195_tesoreria",
+    "152_debito-degli-enti-della-pubblica-amministrazione",
+    "74_gestione-delle-spese-dello-stato",
+    "81_gestione-di-cassa-degli-enti-della-pubblica-amministrazione",
+    "146_litalia-e-lunione-europea",
+    "172_opere-pubbliche",
+    "82_pubblico-impiego",
+    "181_rendiconto",
+    "432_rendiconto",
+    "77_sanit",
+    "195_tesoreria",
 ]
 
 
