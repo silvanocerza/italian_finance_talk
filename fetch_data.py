@@ -88,7 +88,8 @@ class CKAN:
                 continue
         else:
             # Servers are being stupid I guess 🤷
-            print(f"Couldn't download {url}: {last_exc}")
+            with (self._output_path / "errors.log").open("a") as f:
+                f.write(f"Couldn't download {url}: {last_exc}")
 
     async def group_list(self):
         return await self._ckan.action.group_list()
