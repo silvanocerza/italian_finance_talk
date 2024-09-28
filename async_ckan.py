@@ -1,3 +1,4 @@
+import asyncio
 from urllib.parse import urlparse
 
 import aiohttp
@@ -84,7 +85,7 @@ class AsyncRemoteCKAN:
                 ) as res:
                     res.raise_for_status()
                     return res.status, await res.text()
-            except aiohttp.ClientResponseError:
+            except (aiohttp.ClientResponseError, asyncio.TimeoutError):
                 continue
         # Servers are being stupid I guess 🤷
         # Let's fake success
