@@ -173,7 +173,7 @@ groups = [
 
 async def main():
     dataset_path = Path(__file__).parent / "dataset"
-    connector = aiohttp.TCPConnector(limit_per_host=100)
+    connector = aiohttp.TCPConnector(limit_per_host=15)
     async with aiohttp.ClientSession(connector=connector) as session:
         ckan = CKAN(session, dataset_path)
         tasks = []
