@@ -5,8 +5,8 @@ files = list((Path(__file__).parent / "dataset").glob("**/*.csv"))
 bad_char = "�"
 
 # This stupid script fixes some files that have invalid utf-8 chars.
-# Mainly chars with accents, that's why I replace all of them with à.
-# I noticed most of them have that char so that's good enough for me.
+# Mainly chars with accents, I just remove it cause I would have to
+# go through each occurence an I have no time for that.
 
 bad_files = []
 for file in files:
@@ -14,6 +14,6 @@ for file in files:
     if bad_char not in t:
         continue
 
-    t = t.replace(bad_char, "à")
+    t = t.replace(bad_char, "")
     with file.open("w") as f:
         f.write(t)
